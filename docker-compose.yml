@@ -1,0 +1,70 @@
+version: '3.4'
+
+services:
+  items.service.cmd.api:
+    image: ${DOCKER_REGISTRY-}itemsservicecmdapi
+    container_name: ItemsServiceCmd
+    build:
+      context: .
+      dockerfile: Items.Service.Cmd/Items.Service.Cmd.Api/Dockerfile
+    networks:
+      - erp_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MONGODB_CONNECTION_STRING=mongodb://items-mongodb:27017/Items
+      - MONGODB_DATABASE=Items  
+      - MONGODB_ITEM_COLLECTION=ItemsEvents
+      - MONGODB_ITEM_TYPE_COLLECTION=ItemsTypesEvents
+      - KAFKA_TOPIC=ItemsEvents
+      - FAKE_DATA=True
+    depends_on:
+      - items-mongodb
+    entrypoint: ["/bin/sh", "-c", "sleep 15 && dotnet Items.Service.Cmd.Api.dll"]
+
+  items.service.query.api:
+    image: ${DOCKER_REGISTRY-}itemsservicequeryapi
+    container_name: ItemsServiceQuery
+    build:
+      context: .
+      dockerfile: Items.Service.Query/Items.Service.Query.Api/Dockerfile
+    networks:
+      - erp_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - CONNECTION_STRING=Server=items-sqldb,1433;database=Items;TrustServerCertificate=True;user id=sa;password=password@12345#
+      - KAFKA_TOPIC=ItemsEvents
+    depends_on:
+      - items-sqldb
+    entrypoint: ["/bin/sh", "-c", "sleep 30 && dotnet Items.Service.Query.Api.dll"]
+
+  items-mongodb:
+    image: mongo
+    container_name: ItemEventDB
+    ports:
+      - "8004:27017"
+    networks:
+      - erp_network
+    volumes:
+      - items_mongodb_data:/data/db
+
+  items-sqldb:
+    container_name: ItemDB
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=password@12345#
+    networks:
+      - erp_network
+    ports:
+      - "8005:1433"
+    volumes:
+      - items_sql_data:/var/opt/mssql/data:rw
+
+volumes:
+  items_mongodb_data:  
+  items_sql_data:  
+
+networks:
+  erp_network:
+    external: true 

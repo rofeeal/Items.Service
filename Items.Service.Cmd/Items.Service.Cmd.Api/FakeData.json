@@ -1,0 +1,32 @@
+{
+  "Items": [],
+  "ItemTypes": [
+    {
+      "Id": "8dc95c22-5f43-4b7a-a67f-5eb6e51a3d54",
+      "Code": "ITT#001",
+      "Name": "عام",
+      "ForeignName": "General Item",
+      "BranchId": null,
+      "Notes": "عنصر عام قياسي",
+      "IsActive": true
+    },
+    {
+      "Id": "63f3e74f-f5d4-4c5d-bd3c-7419e0287c52",
+      "Code": "ITT#002",
+      "Name": "متميز",
+      "ForeignName": "Premium Item",
+      "BranchId": null,
+      "Notes": "عنصر طبقة عليا مع ميزات خاصة أو جودة عالية",
+      "IsActive": true
+    },
+    {
+      "Id": "91f30fe4-9433-4f91-8e74-91b647b96f6b",
+      "Code": "ITT#003",
+      "Name": "شركات",
+      "ForeignName": "Enterprise Item",
+      "BranchId": null,
+      "Notes": "عنصر مخصص للاستخدام الشركات أو المؤسسات",
+      "IsActive": true
+    }
+  ]
+}
